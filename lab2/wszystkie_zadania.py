@@ -152,8 +152,8 @@ def zadanie1():
     avg = sum(probabilities) / N
     var = sum((x - avg) ** 2 for x in probabilities) / N
 
-    print(f"\nSrednia  = {avg:.6f}  (oczekiwana: 0.5)")
-    print(f"Wariancja = {var:.6f}  (oczekiwana: {1/12:.6f})")
+    # print(f"\nSrednia  = {avg:.6f}  (oczekiwana: 0.5)")
+    # print(f"Wariancja = {var:.6f}  (oczekiwana: {1/12:.6f})")
 
     buckets = split_into_buckets(probabilities, K)
     print(f"\nBuckets (K={K}):")
@@ -185,8 +185,8 @@ def zadanie2():
     avg = sum(probabilities) / N
     var = sum((x - avg) ** 2 for x in probabilities) / N
 
-    print(f"\nSrednia   = {avg:.6f}  (oczekiwana: 0.5)")
-    print(f"Wariancja = {var:.6f}  (oczekiwana: {1/12:.6f})")
+    # print(f"\nSrednia   = {avg:.6f}  (oczekiwana: 0.5)")
+    # print(f"Wariancja = {var:.6f}  (oczekiwana: {1/12:.6f})")
 
     print(f"\nBuckets (K={K}):")
     for bucket in split_into_buckets(probabilities, K):
@@ -195,12 +195,12 @@ def zadanie2():
 
 
 # =============================================================================
-#  ZADANIE 1U - Monte Carlo: P(dokladnie K orlow z N rzutow)
+#  ZADANIE 1U - Monte Carlo: P(sekwencja K orlow pod rzad w N rzutach)
 # =============================================================================
 
 def zadanie1u():
     print("\n" + "=" * 70)
-    print("ZADANIE 1U - Monte Carlo: P(dokladnie K orlow z N rzutow)")
+    print("ZADANIE 1U - Monte Carlo: P(sekwencja K orlow pod rzad w N rzutach)")
     print("=" * 70)
 
     N = 10
@@ -210,13 +210,22 @@ def zadanie1u():
     gen = LinearGenerator(a=16807, c=0, m=2**31 - 1, seed=12345)
     trafienia = 0
     for _ in range(proby):
-        orly = sum(gen.randint(2) for _ in range(N))
-        if orly == K:
+        pod_rzad = 0
+        znaleziono = False
+        for _ in range(N):
+            if gen.randint(2) == 1:
+                pod_rzad += 1
+                if pod_rzad >= K:
+                    znaleziono = True
+                    break
+            else:
+                pod_rzad = 0
+        if znaleziono:
             trafienia += 1
 
     wynik = trafienia / proby
     print(f"N = {N}, K = {K}, proby = {proby}")
-    print(f"P(dokladnie {K} orlow z {N} rzutow) = {wynik:.4f}")
+    print(f"P(co najmniej {K} orlow pod rzad w {N} rzutach) = {wynik:.4f}")
 
 
 # =============================================================================
